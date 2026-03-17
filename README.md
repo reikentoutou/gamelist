@@ -2,6 +2,18 @@
 
 网吧门店游戏资源查询与需求收集的轻量级桌面应用。
 
+---
+
+## 下载使用
+
+**无需安装任何环境，下载即用：**
+
+[>>> 点击下载 GameQuery.exe <<<](https://github.com/reikentoutou/gamelist/raw/main/dist/GameQuery.exe)
+
+下载后双击运行即可，首次运行会自动在同目录下生成 `game_data.json` 数据文件。
+
+---
+
 ## 功能
 
 - **游戏状态查询** — 支持模糊搜索，输入关键词即可匹配所有包含该关键词的已下载游戏
@@ -24,22 +36,20 @@ Valorant,英文,Riot Client
 
 在程序中点击「批量导入」按钮选择文件即可。
 
-## 运行
+## 开发者信息
+
+如需从源码运行或二次开发：
 
 ```bash
+# 运行
 python main.py
-```
 
-需要 Python 3，无额外依赖（Tkinter 为 Python 内置）。
-
-## 打包为 .exe
-
-```bash
+# 打包为 .exe
 pip install pyinstaller
 pyinstaller --onefile --windowed --name "GameQuery" main.py
 ```
 
-生成的可执行文件位于 `dist/` 目录。
+需要 Python 3，Tkinter 为 Python 内置，无额外依赖。
 
 ## 数据存储
 
