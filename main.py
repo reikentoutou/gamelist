@@ -2,10 +2,13 @@ import csv
 import io
 import json
 import os
+import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
-DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "game_data.json")
+# Always store game_data.json next to the running executable/script.
+BASE_DIR = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "game_data.json")
 
 DEFAULT_DATA = {"available": {}, "pending": []}
 
