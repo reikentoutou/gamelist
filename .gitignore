@@ -1,6 +1,6 @@
 game_data.json
-dist/
 build/
 __pycache__/
 *.spec
 .venv/
+dist/game_data.json
