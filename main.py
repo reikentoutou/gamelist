@@ -1,7 +1,9 @@
+import csv
+import io
 import json
 import os
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
 
 DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "game_data.json")
 
@@ -38,6 +40,12 @@ I18N = {
         "info_submitted": "已将「{name}」加入待添加列表",
         "info_added": "已将「{name}」添加至已下载列表",
         "confirm_delete": "确定要删除「{name}」吗？",
+        "btn_import": "批量导入（从 CSV/TXT 文件）",
+        "import_title": "选择导入文件",
+        "import_success": "成功导入 {count} 款游戏",
+        "import_skip": "（跳过 {skip} 款已存在的游戏）",
+        "import_empty": "文件中没有有效数据",
+        "import_format_err": "第 {line} 行格式错误，需要3列（游戏名,启动系统,启动方式）",
         "dlg_tip": "提示",
         "dlg_success": "成功",
         "dlg_confirm": "确认",
@@ -72,6 +80,12 @@ I18N = {
         "info_submitted": '"{name}" has been added to the pending list',
         "info_added": '"{name}" has been added to available games',
         "confirm_delete": 'Delete "{name}"?',
+        "btn_import": "Bulk Import (from CSV/TXT)",
+        "import_title": "Select import file",
+        "import_success": "Successfully imported {count} game(s)",
+        "import_skip": " (skipped {skip} existing game(s))",
+        "import_empty": "No valid data found in the file",
+        "import_format_err": "Line {line}: format error, need 3 columns (game,system,launch)",
         "dlg_tip": "Info",
         "dlg_success": "Success",
         "dlg_confirm": "Confirm",
@@ -106,6 +120,12 @@ I18N = {
         "info_submitted": "「{name}」を追加待ちリストに登録しました",
         "info_added": "「{name}」を追加済みリストに登録しました",
         "confirm_delete": "「{name}」を削除しますか？",
+        "btn_import": "一括インポート（CSV/TXTファイル）",
+        "import_title": "インポートファイルを選択",
+        "import_success": "{count} 本のゲームをインポートしました",
+        "import_skip": "（{skip} 本の既存ゲームをスキップ）",
+        "import_empty": "ファイルに有効なデータがありません",
+        "import_format_err": "{line}行目：フォーマットエラー、3列必要（ゲーム名,システム,起動方法）",
         "dlg_tip": "情報",
         "dlg_success": "完了",
         "dlg_confirm": "確認",
@@ -274,7 +294,53 @@ class GameQueryApp:
         tk.Button(
             frame, text=self.t("btn_manage"),
             command=self._open_manage_window,
+        ).pack(fill="x", pady=(0, 4))
+        tk.Button(
+            frame, text=self.t("btn_import"),
+            command=self._do_bulk_import,
         ).pack(fill="x")
+
+    def _do_bulk_import(self):
+        filepath = filedialog.askopenfilename(
+            title=self.t("import_title"),
+            filetypes=[("CSV / TXT", "*.csv *.txt"), ("All files", "*.*")],
+        )
+        if not filepath:
+            return
+
+        with open(filepath, "r", encoding="utf-8-sig") as f:
+            content = f.read()
+
+        reader = csv.reader(io.StringIO(content))
+        self.data = load_data()
+        added = 0
+        skipped = 0
+        for line_num, row in enumerate(reader, start=1):
+            if not row or all(c.strip() == "" for c in row):
+                continue
+            if len(row) < 3:
+                messagebox.showwarning(self.t("dlg_tip"), self.t("import_format_err", line=line_num))
+                return
+            name, system, launch = row[0].strip(), row[1].strip(), row[2].strip()
+            if not name:
+                continue
+            if name in self.data["available"]:
+                skipped += 1
+                continue
+            self.data["available"][name] = {"system": system, "launch": launch}
+            if name in self.data["pending"]:
+                self.data["pending"].remove(name)
+            added += 1
+
+        if added == 0 and skipped == 0:
+            messagebox.showinfo(self.t("dlg_tip"), self.t("import_empty"))
+            return
+
+        save_data(self.data)
+        msg = self.t("import_success", count=added)
+        if skipped:
+            msg += self.t("import_skip", skip=skipped)
+        messagebox.showinfo(self.t("dlg_success"), msg)
 
     def _open_available_window(self):
         self.data = load_data()
