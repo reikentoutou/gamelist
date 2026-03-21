@@ -1,7 +1,28 @@
+# Data
 game_data.json
+
+# Build artifacts
 dist/
 build/
-__pycache__/
 *.spec
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
 .venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+Desktop.ini
