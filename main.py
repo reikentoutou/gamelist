@@ -1,6 +1,15 @@
+import sys
+import ctypes
+
 import customtkinter as ctk
 
-from app import GameQueryApp
+from ui import GameQueryApp
+
+if sys.platform == "win32":
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    except Exception:
+        pass
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
