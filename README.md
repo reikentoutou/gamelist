@@ -8,7 +8,8 @@
 
 **无需安装任何环境，下载即用：**
 
-[>>> 点击下载 GameQuery.exe <<<](https://github.com/reikentoutou/gamelist/raw/main/dist/GameQuery.exe)
+[>>> 点击下载 GameQuery.exe <<<](https://github.com/reikentoutou/gamelist/releases/latest/download/GameQuery.exe)
+[>>> 点击下载 GameQuery.zip <<<](https://github.com/reikentoutou/gamelist/releases/latest/download/GameQuery.zip)
 
 下载后双击运行即可，首次运行会自动在同目录下生成 `game_data.json` 数据文件。
 
